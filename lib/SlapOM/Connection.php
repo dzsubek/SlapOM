@@ -61,10 +61,14 @@ class Connection
         return $this->maps[$class];
     }
 
-    public function search(EntityMap $map, $dn, $filter, $attributes, $limit = 0)
+    public function search(EntityMap $map, $dn, $filter, $attributes, $limit = 0, $multiLevel = true)
     {
         $this->log(sprintf("SEARCH Class='%s'. DN='%s', filter='%s', attributes={%s}, limit=%d.", get_class($map), $dn, $filter, join(', ', $attributes), $limit));
-        $ret = @ldap_search($this->getHandler(), $dn, $filter, $attributes, 0, $limit);
+		if ($multiLevel) {
+			$ret = @ldap_search($this->getHandler(), $dn, $filter, $attributes, 0, $limit);
+		} else {
+			$ret = @ldap_list($this->getHandler(), $dn, $filter, $attributes, 0, $limit);
+		}
 
         if ($ret === false)
         {
