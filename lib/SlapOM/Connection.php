@@ -48,6 +48,12 @@ class Connection
         }
     }
 
+	/**
+	 * @param string $class
+	 * @param bool   $renew
+	 *
+	 * @return EntityMap
+	 */
     public function getMapFor($class, $renew = false)
     {
         $class = ltrim($class, '\\');
@@ -73,7 +79,7 @@ class Connection
         if ($ret === false)
         {
             throw new LdapException(sprintf("Error while filtering dn '%s' with filter '%s'.", $dn, $filter), $this->handler, $this->error);
-        } 
+        }
         elseif (is_null($ret))
         {
             throw new LdapException(sprintf("It looks like your query '%s' on base dn '%s' did not return a valid result resource. Double check it and look into the server's logs.", $filter, $dn), $this->handler, $this->error);
