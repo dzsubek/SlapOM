@@ -13,7 +13,7 @@ abstract class EntityMap
     protected $ldap_object_class;
     protected $entity_class;
     protected $attributes;
-    protected $read_only_attributes = array('dn', 'objectClass');
+    protected $read_only_attributes = array('dn');
 
     public final function __construct(\SlapOM\Connection $connection)
     {
@@ -113,6 +113,24 @@ abstract class EntityMap
         $this->connection->modify($entity->getDn(), $entry);
         $entity->persist();
     }
+
+	/**
+	 * @param Entity $entity
+	 * @param Array $attributes
+	 */
+	public function create(\SlapOM\Entity $entity, Array $attributes = null)
+	{
+		$attributes = is_null($attributes) ? $this->getAttributeNames() : array_intersect($this->getAttributeNames(), $attributes);
+		$attributes = array_diff($attributes, $this->read_only_attributes);
+		$entry = array();
+
+		foreach ($attributes as $attr)
+		{
+			$entry[$attr] = $entity->has($attr) ? $entity->get($attr) : null;
+		}
+
+		$this->connection->create($entity->get('dn'), $entry);
+	}
 
     public function getSearchFields()
     {

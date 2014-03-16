@@ -143,6 +143,27 @@ class Connection
         return true;
     }
 
+	public function create($dn, $entry)
+	{
+		$this->log(sprintf("CREATE dn='%s'.", $dn));
+
+		$attr = array();
+		foreach ($entry as $name => $value)
+		{
+			if (!empty($value)) {
+				$attr[$name] = is_array($value) ? $value : array($value);
+			}
+		}
+
+		$ret = @ldap_add($this->getHandler(), $dn, $attr);
+		if ($ret === false)
+		{
+			$this->log(sprintf("LDAP ERROR '%s' -- Adding {%s}.", ldap_error($this->getHandler()), print_r($attr, true)), \SlapOM\LoggerInterface::LOGLEVEL_CRITICAL);
+
+			throw new LdapException(sprintf("Error while ADDING entry {%s} in dn='%s'.", join(', ', array_keys($attr)), $dn), $this->getHandler(), $this->error);
+		}
+	}
+
     protected function isOpen()
     {
         return !(is_null($this->handler) or $this->handler === false);
