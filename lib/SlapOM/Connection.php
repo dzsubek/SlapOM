@@ -164,6 +164,20 @@ class Connection
 		}
 	}
 
+	public function delete($dn)
+	{
+		$this->log(sprintf("DELETE dn='%s'.", $dn));
+
+		$ret = @ldap_delete($this->getHandler(), $dn);
+		if ($ret === false)
+		{
+			$this->log(sprintf("LDAP ERROR '%s' -- DELETE {%s}.", ldap_error($this->getHandler()), print_r($dn, true)), \SlapOM\LoggerInterface::LOGLEVEL_CRITICAL);
+			throw new LdapException(sprintf("Error while DELETE entry dn='%s'.",  $dn), $this->getHandler(), $this->error);
+		}
+
+		return true;
+	}
+
     protected function isOpen()
     {
         return !(is_null($this->handler) or $this->handler === false);
