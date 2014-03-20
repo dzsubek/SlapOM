@@ -29,7 +29,7 @@ abstract class Entity implements \ArrayAccess
 
     public function modify()
     {
-        $this->state = $this->state | self::ENTITY_MODIFIED;
+		$this->state = $this->state | self::ENTITY_MODIFIED;
     }
 
     public function isModified()
