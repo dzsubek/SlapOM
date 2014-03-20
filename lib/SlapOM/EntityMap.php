@@ -132,6 +132,16 @@ abstract class EntityMap
 		$this->connection->create($entity->get('dn'), $entry);
 	}
 
+	/**
+	 * @param Entity $entity
+	 *
+	 * @return bool
+	 */
+	public function delete(\SlapOM\Entity $entity)
+	{
+		return $this->connection->delete($entity->get('dn'));
+	}
+
     public function getSearchFields()
     {
         return $this->getAttributeNames();
