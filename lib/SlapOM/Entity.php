@@ -53,7 +53,7 @@ abstract class Entity implements \ArrayAccess
     }
 
 
-    public function get($name, $default = null)
+    public function get($name, $default = '')
     {
         if (!$this->has($name))
         {
@@ -137,7 +137,7 @@ abstract class Entity implements \ArrayAccess
      */
     public function __call($method, $arguments)
     {
-        list($operation, $attribute) = preg_split('/(?=[A-Z])/', $method, 2);
+		list($operation, $attribute) = preg_split('/(?=[A-Z])/', $method, 2);
         $attribute = strtolower($attribute[0]).substr($attribute, 1);
 
         switch($operation)
@@ -148,7 +148,7 @@ abstract class Entity implements \ArrayAccess
         case 'get':
             return isset($arguments[0]) ? $this->get($attribute, $arguments[0]) : $this->get($attribute);
         case 'has':
-            return $this->has($attribute);
+            return true;
         case 'clear':
             $this->clear($attribute);
             break;
